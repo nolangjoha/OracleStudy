@@ -1,0 +1,18 @@
+--게시판 테이블
+CREATE TABLE BOARD(
+    BNO     NUMBER,
+    TITLE   VARCHAR2(100)   NOT NULL,
+    CONTENT VARCHAR2(1000)  NOT NULL,
+    WRITER  VARCHAR2(100)   NOT NULL,
+    REGDATE DATE    DEFAULT SYSDATE,
+    UPDATEDATE DATE DEFAULT SYSDATE,
+    VIEWCOUNT NUMBER DEFAULT 0,
+    CONSTRAINT PK_BOARD PRIMARY KEY (BNO)
+);
+
+--bno, title, content, writer, regdate, updatedate, viewcount
+
+--시퀀스 생성
+CREATE SEQUENCE SEQ_BOARD; --BNO컬럼의 게시물 번호 데이터
+
+
