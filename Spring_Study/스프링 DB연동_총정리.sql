@@ -542,3 +542,52 @@ SELECT c_code, c_name, c_pcode From category WHERE c_pcode = 1;
 
 
 
+----24.06.04(화)----로그인시 회원관리리스트 출력해보기--------
+--전체 데이터 조회만
+SELECT 
+    u_id, u_pwd, u_name, u_email, u_zip_code, u_addr, u_addrdetail, u_phone, u_regdate
+FROM 
+    userinfo;
+--회원가입 순번대로 확인해야하니까 제약조건으로 순번 출력
+SELECT
+    u_id, u_pwd, u_name, u_email, u_zip_code, u_addr, u_addrdetail, u_phone, u_regdate
+FROM (
+    SELECT /*+ INDEX_DESC(userinfo PK_USERINFO) */
+        ROWNUM AS rn,
+        u_id, u_pwd, u_name, u_email, u_zip_code, u_addr, u_addrdetail, u_phone, u_regdate
+    FROM
+        userinfo
+)
+WHERE
+    rn <= 4;
+----내림차순으로 출력만 한 코드
+SELECT
+    u_id, u_pwd, u_name, u_email, u_zip_code, u_addr, u_addrdetail, u_phone, u_regdate
+FROM (
+    SELECT /*+ INDEX_DESC(userinfo PK_USERINFO) */
+        ROWNUM AS rn,
+        u_id, u_pwd, u_name, u_email, u_zip_code, u_addr, u_addrdetail, u_phone, u_regdate
+    FROM
+        userinfo
+)
+ORDER BY rn DESC
+
+---강사님이 주신걸로 더미데이터 추가하기 전에 기존데이터가 있으면 에러 발생 값을 없애준다.--------
+delete from USERINFO;
+commit;
+---더미데이터 추가----
+declare
+vn_cnt number := 1;
+begin
+while vn_cnt <= 1000
+LOOP
+INSERT INTO userinfo(u_id, u_pwd, u_name, u_email, u_zip_code, u_addr, u_addrdetail, u_phone)
+VALUES('user0' || vn_cnt, '$2a$10$sNBXZsZ/ADSWEBm5ZIWcB.SoZFoZiJRw8fDLYSx.d8enLtyzujeUS', '홍길동0' || vn_cnt, 'user0' || vn_cnt || '@naver.com', '12345', '서울시 노원구', '이젠빌딩 100번지', '010-1234-5678');
+
+vn_cnt := vn_cnt + 1;
+end loop;
+end;
+
+commit;
+
+
